@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 
+
 import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
@@ -13,6 +14,7 @@ import authRoutes from './routes/authRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js'; // Import the new route
+import languageToolRoutes from "./routes/languageToolRoutes.js";
 
 dotenv.config();
 
@@ -36,7 +38,7 @@ app.use(cors({
 // reject it with a 401 Unauthorized error, even if the user had previously logged in successfully.
 
 // Body parser middleware
-app.use(express.json());
+app.use(express.json({ limit: "20kb" }));
 //This middleware is responsible for parsing incoming requests with JSON payloads. 
 // When your React frontend sends data to your API 
 // (for example, when a user registers or creates a blog post), 
@@ -66,6 +68,7 @@ app.use('/api/blogs', blogRoutes);
 // The comment routes are nested under blogs
 app.use('/api/blogs', commentRoutes);
 app.use('/api/upload', uploadRoutes); 
+app.use("/api", languageToolRoutes);
 
 
 // Error Handling Middleware
