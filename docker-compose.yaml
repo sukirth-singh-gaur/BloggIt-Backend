@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    container_name: blog-backend
+    ports:
+      - "5001:5001"
+    env_file:
+      - .env
+    environment:
+      - LANGUAGETOOL_URL=http://languagetool:8010
+    depends_on:
+      - languagetool
+    restart: unless-stopped
+
+  languagetool:
+    image: erikvl87/languagetool
+    container_name: languagetool
+    environment:
+      - Java_Xms=256m
+      - Java_Xmx=512m
+    deploy:
+      resources:
+        limits:
+          memory: 900M
+    restart: unless-stopped

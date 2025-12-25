@@ -4,8 +4,8 @@
  * @access  Public
  */
 
-const LANGUAGE_TOOL_URL =
-  process.env.LANGUAGETOOL_URL;
+const LANGUAGE_TOOL_URL = process.env.LANGUAGETOOL_URL|| "http://localhost:8010";
+
 
 const languageCheck = async (req, res) => {
   try {
