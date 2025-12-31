@@ -27,7 +27,8 @@ const app = express();
 
 // CORS Configuration
 app.use(cors({
-    origin: 'http://localhost:3000', //frontend URL
+    origin: ['http://localhost:3000',
+    'https://project-bloggit.vercel.app'], //frontend URL
     credentials: true,
     //Setting credentials: true tells the browser that it is safe to send 
     // "credentials"—like cookies, authorization headers, or TLS client 
