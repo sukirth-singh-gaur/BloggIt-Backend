@@ -1,42 +1,39 @@
-/**
- * @desc    Grammar and spell check
- * @route   POST /api/grammar-check
- * @access  Public
- */
+import axios from "axios";
 
-const LANGUAGE_TOOL_URL = process.env.LANGUAGETOOL_URL|| "http://localhost:8010";
-
+const LANGUAGE_TOOL_URL =
+  process.env.LANGUAGETOOL_URL || "http://localhost:8010";
 
 const languageCheck = async (req, res) => {
   try {
     const { text } = req.body;
 
     if (!text || typeof text !== "string") {
-      return res.status(400).json({
-        error: "Text is required for grammar check",
-      });
+      return res.status(400).json({ error: "Text is required" });
     }
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
-
-    const response = await fetch(`${LANGUAGE_TOOL_URL}/v2/check`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
+    const response = await axios.post(
+      `${LANGUAGE_TOOL_URL}/v2/check`,
+      new URLSearchParams({
         text,
         language: "en-US",
-      }),
-      signal: controller.signal,
-    });
+      }).toString(),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "BloggIt-Backend/1.0",
+        },
+        timeout: 10000,
+      }
+    );
 
-    clearTimeout(timeout);
-
-    const data = await response.json();
-    res.json(data);
+    res.json(response.data);
   } catch (err) {
+    console.error(
+      "Grammar error:",
+      err.code,
+      err.message
+    );
+
     res.status(503).json({
       error: "Grammar service unavailable",
     });
