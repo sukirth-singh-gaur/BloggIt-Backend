@@ -15,6 +15,7 @@ import blogRoutes from './routes/blogRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js'; // Import the new route
 import languageToolRoutes from "./routes/languageToolRoutes.js";
+import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
 
 dotenv.config();
 
@@ -31,12 +32,13 @@ app.use(cors({
     'https://project-bloggit.vercel.app'], //frontend URL
     credentials: true,
     //Setting credentials: true tells the browser that it is safe to send 
-    // "credentials"—like cookies, authorization headers, or TLS client 
+// "credentials"—like cookies, authorization headers, or TLS client 
     // certificates—with the cross-origin requests the frontend makes.
 }));
 //Without credentials: true, the browser would not attach the jwt cookie to the API requests. 
 // Your backend would receive the request without any authentication information and would 
 // reject it with a 401 Unauthorized error, even if the user had previously logged in successfully.
+app.use(ClerkExpressWithAuth());
 
 // Body parser middleware
 app.use(express.json({ limit: "20kb" }));
