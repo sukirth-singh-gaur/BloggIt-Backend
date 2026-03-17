@@ -31,4 +31,4 @@ jobs:
             docker compose -f docker-compose.yaml down
 
             echo "Starting containers..."
-            docker compose -f docker-compose.yaml up -d --build
+            docker compose -f docker-compose.yaml up -d --build --remove-orphans
