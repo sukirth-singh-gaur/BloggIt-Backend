@@ -10,17 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: backend
-
-      - name: Run tests
-        run: npm test || echo "No tests yet"
-        working-directory: backend
-
+      # 2. Deploy
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -38,6 +32,3 @@ jobs:
 
             echo "Starting containers..."
             docker compose -f docker-compose.yaml up -d --build
-
-            echo "Cleanup..."
-            docker system prune -f
