@@ -28,7 +28,8 @@ jobs:
             git pull origin main
 
             echo "Stopping containers..."
-            docker compose -f docker-compose.yaml down
-
+            docker compose docker-compose.yaml down
+            
+            docker system prune -a -f
             echo "Starting containers..."
             docker compose -f docker-compose.yaml up -d --build --remove-orphans
