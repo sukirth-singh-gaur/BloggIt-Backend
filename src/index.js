@@ -4,7 +4,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-
+import client from 'prom-client';
 
 
 import connectDB from './config/db.js';
@@ -70,15 +70,6 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/blogs', commentRoutes);
 app.use('/api/upload', uploadRoutes); 
 app.use("/api", languageToolRoutes);
-
-
-// Error Handling Middleware
-app.use(notFound);
-app.use(errorHandler);
-app.listen(port, () => console.log(`Server running on port ${port}`));
-
-const client = require("prom-client");
-
 // default system metrics
 client.collectDefaultMetrics();
 
@@ -105,3 +96,12 @@ app.get("/metrics", async (req, res) => {
   res.set("Content-Type", client.register.contentType);
   res.end(await client.register.metrics());
 });
+
+
+// Error Handling Middleware
+app.use(notFound);
+app.use(errorHandler);
+
+
+
+app.listen(port, () => console.log(`Server running on port ${port}`));
