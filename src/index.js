@@ -76,3 +76,32 @@ app.use("/api", languageToolRoutes);
 app.use(notFound);
 app.use(errorHandler);
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+const client = require("prom-client");
+
+// default system metrics
+client.collectDefaultMetrics();
+
+// custom metric
+const httpRequestCounter = new client.Counter({
+  name: "http_requests_total",
+  help: "Total number of HTTP requests",
+  labelNames: ["method", "route", "status"],
+});
+
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    httpRequestCounter.inc({
+      method: req.method,
+      route: req.route?.path || req.path,
+      status: res.statusCode,
+    });
+  });
+  next();
+});
+
+// metrics endpoint
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(await client.register.metrics());
+});
